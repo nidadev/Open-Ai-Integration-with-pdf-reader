@@ -14,7 +14,7 @@ class OpenAiChatController extends Controller
         $search = "what is google";
         $data = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer'.env('OPENAI_API_KEY'),
+            'Authorization' => 'Bearer '.env('OPENAI_API_KEY'),
             
         ])->post('https://api.openai.com/v1/completions',[
             'model' => 'gpt-3.5-turbo-instruct',
@@ -31,8 +31,8 @@ class OpenAiChatController extends Controller
                 'presence_penalty' => 0.5,
                 'stop' => ["11."]
                 ])->json();
-                dd($data);
+                //dd($data);
 
-        return response()->json($data['choices'][0]['message'], 200,array(),JSON_PRETTY_PRINT);
+        return response()->json($data, 200,array(),JSON_PRETTY_PRINT);
     }
 }
