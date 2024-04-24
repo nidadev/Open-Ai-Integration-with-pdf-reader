@@ -23,4 +23,4 @@ Route::get('/', function () {
 ;
 Route::get('pdf',[PDFExtractController::class,'extractPdf']);
 Route::get('progress',[ProgressBarController::class,'index']);
-Route::post('upload-pdf',[ProgressBarController::class,'uploadToSrv']);
+Route::post('upload-pdf',[ProgressBarController::class,'uploadToSrv']);//upload
