@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PDFExtractController;
 use App\Http\Controllers\ProgressBarController;
+use App\Http\Controllers\OpenAiChatController;
 
 
 
@@ -24,3 +25,4 @@ Route::get('/', function () {
 Route::get('pdf',[PDFExtractController::class,'extractPdf']);
 Route::get('progress',[ProgressBarController::class,'index']);
 Route::post('upload-pdf',[ProgressBarController::class,'uploadToSrv']);//upload
+Route::get('open-api',[OpenAiChatController::class,'openApiChat']);//upload
