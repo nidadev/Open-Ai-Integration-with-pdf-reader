@@ -23,6 +23,7 @@ class OpenAiChatController extends Controller
             [
                 //'role' => 'user',
                 //'content' => $search
+                'file' => '@mydata.jsonl'
             ]
                 ],
                 'model' => 'gpt-3.5-turbo',
