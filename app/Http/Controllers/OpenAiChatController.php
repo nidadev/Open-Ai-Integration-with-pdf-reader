@@ -26,7 +26,6 @@ class OpenAiChatController extends Controller
             [
                 'role' => 'user',
                 'content' => $search
-                //'file' => '@mydata.jsonl'
             ]
            
                 ],
