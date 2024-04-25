@@ -15,16 +15,17 @@ class OpenAiChatController extends Controller
         $search = "what is pm";
         $data = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer '.env('GROQ_API_KEY'),
+            'Authorization' => 'Bearer '.env('OPENAI_API_KEY'),
             
-        ])->post('https://api.groq.com/openai/v1/chat/completions',[
+        ])->post('
+        https://api.openai.com/v1/files',[
             'messages' => [
             [
-                'role' => 'user',
-                'content' => $search
+                //'role' => 'user',
+                //'content' => $search
             ]
                 ],
-                'model' => 'mixtral-8x7b-32768',
+                'model' => 'gpt-3.5-turbo',
 
                 'temperature' => 0.5,
                 'max_tokens'  => 200,
@@ -33,7 +34,7 @@ class OpenAiChatController extends Controller
                 'presence_penalty' => 0.5,
                 'stop' => ["11."]
                 ])->json();
-                //dd($data);
+                dd($data);
 
         return response()->json($data["choices"][0]['message'], 200,array(),JSON_PRETTY_PRINT);
         /*$groq = new Groq(getenv('GROQ_API_KEY'));
