@@ -13,7 +13,6 @@ use Livewire\Component;
 use OpenAI\Laravel\Facades\OpenAI;
 use Sastrawi\Stemmer\StemmerFactory;
 
-
 class ConvertFiletoText extends Component
 {
     public $document, $convertedText, $input , $answer;
@@ -35,7 +34,7 @@ class ConvertFiletoText extends Component
             // Instantiate the VectorService class
             $vectorService = new VectorService();;;
             $relevantChunks = $vectorService->getMostSimilarVectors($vector['data'][0]['embedding'], $pdf_file->id, 4);
-            ///rrrrStore Input and Vector
+            ///Store Input and Vector
 
             // Inputvector::create([
             //     'text' => $this->input ,
@@ -44,12 +43,18 @@ class ConvertFiletoText extends Component
 
             //$texts = $vectorService->getTextsFromIds(collect($relevantChunks)->pluck('id'));
             $similarTexts = $vectorService->getTextsFromIds(array_column($relevantChunks, 'id'));
-            //dd($similarTexts);
-
+        //dd($similarTexts[0]);
+            /*$valueToSearch= 'employee';
+            $result = array();
+            foreach($similarTexts as $t=>$value) {
+               if(preg_match("/\b$valueToSearch\b/i", $value)){
+                  $result[$t] = $value;
+               }
+            }*/
+            //dd($result);
             // Combine the relevant texts into a single string as the knowledge base
-            $knowledgeBase = implode(' ', $similarTexts);
-            
-    
+            $knowledgeBase = implode(' ', $similarTexts);            
+           
             // Construct the prompt as a question and knowledge base
             $prompt = "You are an expert in answering Questions \n please answer the following question: " . $this->input . " Using only the following source documents : " . $knowledgeBase ."\n if the answer is not there just say 'sorry I do not Know'" ;
 
@@ -65,7 +70,6 @@ class ConvertFiletoText extends Component
             dd($th->getMessage());
         }
     }
-
 
     public function render()
     {

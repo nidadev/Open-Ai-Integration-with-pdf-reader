@@ -50,8 +50,6 @@ class VectorService
 
     return $textsOrderedByIds;
 }
-
-
     /**
      * Retrieve the text for a given vector ID.
      *
