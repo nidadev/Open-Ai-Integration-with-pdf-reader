@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FileUpload extends Model
+class TextVector extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+
+    protected $fillable = [
+        'vector' , 'text_id' , 'file_id'
+    ];
 }
