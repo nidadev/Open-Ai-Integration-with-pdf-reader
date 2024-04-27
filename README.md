@@ -21,3 +21,4 @@ This project is a Laravel application that utilizes OpenAI embeddings for search
 
 
 ![ScreenShot Tool -20240427214022](https://github.com/nidadev/home-assign/assets/53574300/4c0fd4cd-0b61-426e-955b-2c5b8c3a2ed3)
+![ScreenShot Tool -20240427215659](https://github.com/nidadev/home-assign/assets/53574300/6964f836-ea22-40a0-a10d-3aac6a519fab)
