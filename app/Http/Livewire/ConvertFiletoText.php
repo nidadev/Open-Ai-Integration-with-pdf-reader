@@ -26,7 +26,6 @@ class ConvertFiletoText extends Component
         $pdf_file = Pdfdoc::find($this->document);
         try {
             //convert  input into vector
-            //convert  input into vector
             $vector = OpenAI::embeddings()->create([
                 'model' => 'text-embedding-ada-002',
                 'input' => $this->input,
@@ -35,23 +34,7 @@ class ConvertFiletoText extends Component
             $vectorService = new VectorService();;;
             $relevantChunks = $vectorService->getMostSimilarVectors($vector['data'][0]['embedding'], $pdf_file->id, 4);
             ///Store Input and Vector
-
-            // Inputvector::create([
-            //     'text' => $this->input ,
-            //     'vector' => json_encode($vector['data'][0]['embedding'])
-            // ]);
-
-            //$texts = $vectorService->getTextsFromIds(collect($relevantChunks)->pluck('id'));
             $similarTexts = $vectorService->getTextsFromIds(array_column($relevantChunks, 'id'));
-        //dd($similarTexts[0]);
-            /*$valueToSearch= 'employee';
-            $result = array();
-            foreach($similarTexts as $t=>$value) {
-               if(preg_match("/\b$valueToSearch\b/i", $value)){
-                  $result[$t] = $value;
-               }
-            }*/
-            //dd($result);
             // Combine the relevant texts into a single string as the knowledge base
             $knowledgeBase = implode(' ', $similarTexts);            
            
@@ -66,6 +49,7 @@ class ConvertFiletoText extends Component
             ]);
             //dd($response['choices'][0]['text']);
             $this->answer =  $response['choices'][0]['text'];
+            
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }

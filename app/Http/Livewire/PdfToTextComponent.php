@@ -53,15 +53,6 @@ class PdfToTextComponent extends Component
         $cleanedText = implode(' ', $stemmedTokens);
 
         $this->convertedText = $cleanedText;
-        // $chunkSize = 100;
-
-        // // split the text into chunks
-        // $chunks = str_split($cleanedText, $chunkSize);
-
-        // Split text into chunks with context
-        // $wordsPerChunk = 1000; // number of words per chunk
-        // $pattern = '/\s+/' . '{1,' . $wordsPerChunk . '}(?=\s)/'; // regex pattern to split by words
-        // $chunks = preg_split($pattern, $cleanedText, -1, PREG_SPLIT_NO_EMPTY);
 
         // Split text into chunks with context
         $wordsPerChunk = 1000; // number of words per chunk
@@ -70,7 +61,6 @@ class PdfToTextComponent extends Component
 
         $chunks = preg_split($pattern, $cleanedText, -1, PREG_SPLIT_NO_EMPTY);
         $chunkCount = count($chunks);
-
         // Loop through the chunks and store each one as a vector
         foreach ($chunks as $a => $chunk) {
             $context = '';
@@ -84,6 +74,7 @@ class PdfToTextComponent extends Component
             }
 
             $chunkWithContext = $context . ' ' . $chunk;
+            //dd(str_split($chunkWithContext,40));
 
             // Generate a vector for the chunk using the OpenAI API
             try {
@@ -110,8 +101,6 @@ class PdfToTextComponent extends Component
                 continue;
             }
         }
-
-
 
         $this->reset('pdf_doc');
         session()->flash('message', 'File created & converted Successfully');
