@@ -1,16 +1,12 @@
-# Laravel PDF Search with OpenAI Embeddings
-
 This project is a Laravel application that utilizes OpenAI embeddings for searching through PDF documents.
 
 ## Features
-
 - Convert PDF files into text and extract relevant information.
 - Search through PDF documents using natural language queries.
 
 ## Requirements
-
-- PHP >= 7.4
-- Laravel >= 8.0
+- PHP >= 8.1
+- Laravel >= 9
 - OpenAI API key
 
 ## Installation
