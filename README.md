@@ -1,15 +1,11 @@
 # Laravel PDF Search with OpenAI Embeddings
 
-This project is a Laravel application that utilizes OpenAI embeddings for searching through PDF documents. It allows you to convert PDF files into searchable vectors using OpenAI's text-embedding models, and perform efficient searches based on user input.
+This project is a Laravel application that utilizes OpenAI embeddings for searching through PDF documents.
 
 ## Features
 
 - Convert PDF files into text and extract relevant information.
-- Generate vector representations using OpenAI embeddings for efficient search.
 - Search through PDF documents using natural language queries.
-- Retrieve relevant chunks of text based on similarity scores.
-- Utilize cosine similarity for accurate search results.
-- Seamless integration with Laravel framework.
 
 ## Requirements
 
@@ -24,20 +20,10 @@ This project is a Laravel application that utilizes OpenAI embeddings for search
 3. Configure your OpenAI API key in the `.env` file.
 4. Run the database migrations.
 5. Start the Laravel development server.
+![ScreenShot Tool -20240427214151](https://github.com/nidadev/home-assign/assets/53574300/c6b3b634-b907-400b-9a47-acdbc06e62eb)
 
-For detailed installation instructions and usage examples, please refer to the [documentation](link-to-your-documentation).
-
-## Contributing
-
-Contributions are welcome! If you encounter any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
+![ScreenShot Tool -20240427214022](https://github.com/nidadev/home-assign/assets/53574300/d26e97b1-98d9-432a-a311-6a4e046781a3)
 
 
 
-## Acknowledgements
-
-This project relies on the power of OpenAI embeddings for text analysis and search capabilities. We would like to express our gratitude to the OpenAI team for providing such an amazing technology.
-
-## Contact
-
-For any inquiries or questions, please contact [khaya.developer@gmail.com](mailto:khaya.developer@gmail.com). We would be happy to assist you.
 
