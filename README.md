@@ -1,3 +1,4 @@
+
 This project is a Laravel application that utilizes OpenAI embeddings for searching through PDF documents.
 
 ## Features
