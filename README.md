@@ -18,6 +18,8 @@ This project is a Laravel application that utilizes OpenAI embeddings for search
 4. Run the database migrations.
 5. Start the Laravel development server.
 
+Unit Testing -> (dev branch)
+
    example queries:
 what is the employer's name in this w2?
 what is the gross and net income in this W2?
