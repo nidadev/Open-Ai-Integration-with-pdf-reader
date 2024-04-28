@@ -18,6 +18,8 @@ class PdfdocFactory extends Factory
     {
         return [
             //
+            'name' => fake()->name(),
+            'file' => fake()->name(),
         ];
     }
 }

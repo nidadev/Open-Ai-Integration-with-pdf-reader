@@ -5,6 +5,7 @@ namespace Tests\Unit;
 //use PHPUnit\Framework\TestCase;
 use Tests\TestCase;
 use App\Models\TextData;
+use DB;
 
 class TextDataTest extends TestCase
 {
@@ -20,8 +21,9 @@ class TextDataTest extends TestCase
 
     public function test_check_if_text_data_fetched_with_id()
     {
-        $textdata = TextData::factory(10)->create();
+       TextData::factory(10)->create();
         $response = DB::table('text_data')->first();
-        dd($response);
+        $this->assertEquals(1,$response->id);
+        //dd($response);
     }
 }
