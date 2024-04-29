@@ -13,7 +13,9 @@ class ExampleTest extends TestCase
     public function test_the_application_returns_a_successful_response(): void
     {
         $response = $this->get('/');
-
+        //$response = $this->get('/pdf-text');
+        //$response = $this->get('/convert-pdf');
         $response->assertStatus(200);
+        
     }
 }
