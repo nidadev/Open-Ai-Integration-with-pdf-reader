@@ -12,7 +12,7 @@
                     questions against the document content.
                 </p>
                 <div class="actions">
-                    <a class="button-link primary" href="{{ route('pdf-text') }}">Upload PDF</a>
+                    <a class="button-link primary" href="{{ route('upload-pdf') }}">Upload PDF</a>
                     <a class="button-link secondary" href="{{ route('convert-pdf') }}">Search PDF</a>
                 </div>
             </div>

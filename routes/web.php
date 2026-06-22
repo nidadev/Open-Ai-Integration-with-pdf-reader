@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/pdf-text' ,  PdfToTextComponent::class)->name('pdf-text');
-Route::post('/pdf-text' ,  [PdfUploadController::class, 'store'])->name('pdf-text.upload');
+Route::redirect('/pdf-text', '/upload-pdf');
+Route::get('/upload-pdf' ,  PdfToTextComponent::class)->name('upload-pdf');
+Route::post('/upload-pdf' ,  [PdfUploadController::class, 'store'])->name('upload-pdf.store');
 Route::get('/convert-pdf' ,  ConvertFiletoText::class)->name('convert-pdf');
 
 //Auth::routes();

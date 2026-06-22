@@ -173,7 +173,7 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">AI PDF Reader</a>
                 <div class="nav-links">
-                    <a class="nav-link" href="{{ route('pdf-text') }}">Upload PDF</a>
+                    <a class="nav-link" href="{{ route('upload-pdf') }}">Upload PDF</a>
                     <a class="nav-link" href="{{ route('convert-pdf') }}">Search PDF</a>
                 </div>
             </div>

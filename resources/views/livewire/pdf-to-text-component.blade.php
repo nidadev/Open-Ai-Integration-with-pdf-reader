@@ -4,7 +4,7 @@
             <h4>UPLOAD PDF</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('pdf-text.upload') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('upload-pdf.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="col">
