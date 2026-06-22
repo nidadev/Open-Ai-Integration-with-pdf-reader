@@ -6,15 +6,16 @@ use App\Models\Pdfdoc;
 use App\Models\TextData;
 use App\Models\TextVector;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use OpenAI\Laravel\Facades\OpenAI;
-use Sastrawi\Stemmer\StemmerFactory;
 
 class PdfToTextComponent extends Component
 {
     use WithFileUploads;
     public $pdf_doc, $convertedText;
+
     protected $rules = [
         'pdf_doc' => ['required','mimes:pdf'],
     ];
@@ -28,40 +29,19 @@ class PdfToTextComponent extends Component
             'name' => $file_name,
             'file' => $file,
         ]);
-        //Convert Pdf to Text
-        $sl = str_replace('/', '\\', $file);
-        $pdf_path = Storage::path('\public\\' . $sl);
+
+        // Convert PDF to text.
+        $pdf_path = Storage::disk('public')->path($file);
         $parser = new \Smalot\PdfParser\Parser();
         $pdf = $parser->parseFile($pdf_path);
         $pdf_text = $pdf->getText();
-        //Tokenizing Text
-        $tokens = tokenize($pdf_text);
-        //Normalizing Text
-        $normalizedTokens = normalize_tokens($tokens);
-        // Remove stop words from the array
-        $stopWords = ['a', 'an', 'the', 'in', 'on', 'at', 'for', 'and', 'but', 'or', 'not', 'with'];
-        $filtered_words = array_diff($normalizedTokens, $stopWords);
-        // create stemmer instance
-        $stemmerFactory = new StemmerFactory();
-        $stemmer = $stemmerFactory->createStemmer();
-        // assuming $normalizedTokens contains an array of normalized text tokens
-        $stemmedTokens = array();
-        foreach ($filtered_words as $token) {
-            // stem each token and add it to $stemmedTokens array
-            $stemmedTokens[] = $stemmer->stem($token);
-        }
-        $cleanedText = implode(' ', $stemmedTokens);
+        $cleanedText = $this->cleanText($pdf_text);
 
         $this->convertedText = $cleanedText;
 
-        // Split text into chunks with context
-        $wordsPerChunk = 1000; // number of words per chunk
-        $overlapWords = 200; // number of overlapping words between chunks
-        $pattern = '/\s+' . '\{1,' . ($wordsPerChunk + $overlapWords) . '\}(?=\s)/'; // regex pattern to split by words with overlap
-
-        $chunks = preg_split($pattern, $cleanedText, -1, PREG_SPLIT_NO_EMPTY);
+        $chunks = $this->chunkText($cleanedText);
         $chunkCount = count($chunks);
-        // Loop through the chunks and store each one as a vector
+
         foreach ($chunks as $a => $chunk) {
             $context = '';
             if ($a > 0) {
@@ -74,37 +54,78 @@ class PdfToTextComponent extends Component
             }
 
             $chunkWithContext = $context . ' ' . $chunk;
-            //dd(str_split($chunkWithContext,40));
+            $vector = $this->embeddingFor($chunkWithContext);
 
-            // Generate a vector for the chunk using the OpenAI API
-            try {
-                $vector = OpenAI::embeddings()->create([
-                    'model' => 'text-embedding-ada-002',
-                    'input' => $chunkWithContext,
-                ]);
+            $textData = TextData::firstOrCreate([
+                'file_id' => $pdf_file->id,
+                'text' => $chunkWithContext,
+            ]);
 
-                // Store the chunk to the database
-                $textData = TextData::firstOrCreate([
-                    'file_id' => $pdf_file->id,
-                    'text' => $chunkWithContext,
-                ]);
-
-                // Store the vector in the database
-                $vectors = TextVector::create([
-                    'text_id' => $textData->id,
-                    'vector' => json_encode($vector['data'][0]['embedding']),
-                    'file_id' => $pdf_file->id,
-                ]);
-            } catch (\Exception $e) {
-                // Handle other exceptions
-                dd('OpenAI API exception: ' . $e->getMessage());
-                continue;
-            }
+            TextVector::create([
+                'text_id' => $textData->id,
+                'vector' => json_encode($vector),
+                'file_id' => $pdf_file->id,
+            ]);
         }
 
         $this->reset('pdf_doc');
         session()->flash('message', 'File created & converted Successfully');
     }
+
+    private function cleanText(string $text): string
+    {
+        $text = Str::of($text)
+            ->replaceMatches('/[^\P{C}\n\t]+/u', ' ')
+            ->replaceMatches('/\s+/', ' ')
+            ->trim();
+
+        return (string) $text;
+    }
+
+    private function chunkText(string $text, int $wordsPerChunk = 450, int $overlapWords = 80): array
+    {
+        $words = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+        if (!$words) {
+            return [];
+        }
+
+        $chunks = [];
+        $step = max(1, $wordsPerChunk - $overlapWords);
+
+        for ($start = 0; $start < count($words); $start += $step) {
+            $chunks[] = implode(' ', array_slice($words, $start, $wordsPerChunk));
+        }
+
+        return $chunks;
+    }
+
+    private function embeddingFor(string $text): array
+    {
+        if (config('openai.api_key')) {
+            $vector = OpenAI::embeddings()->create([
+                'model' => 'text-embedding-ada-002',
+                'input' => $text,
+            ]);
+
+            return $vector['data'][0]['embedding'];
+        }
+
+        return $this->localEmbedding($text);
+    }
+
+    private function localEmbedding(string $text, int $dimensions = 256): array
+    {
+        $vector = array_fill(0, $dimensions, 0.0);
+        $words = preg_split('/[^a-z0-9]+/i', strtolower($text), -1, PREG_SPLIT_NO_EMPTY);
+
+        foreach ($words as $word) {
+            $index = abs(crc32($word)) % $dimensions;
+            $vector[$index] += 1.0;
+        }
+
+        return $vector;
+    }
+
     public function render()
     {
         return view('livewire.pdf-to-text-component')->extends('layouts.app')->section('content');

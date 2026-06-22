@@ -3,83 +3,187 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    <!-- Scripts -->
-
-    <script src="//unpkg.com/alpinejs" defer></script>
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <title>{{ config('app.name', 'AI PDF Reader') }}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #141733;
+        }
+        .navbar {
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(15, 23, 42, 0.05);
+        }
+        .container {
+            width: min(1040px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+        .navbar .container {
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .navbar-brand {
+            color: #15184a;
+            font-size: 20px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 9px 12px;
+            border-radius: 6px;
+        }
+        .nav-link:hover { background: #f2f4fb; color: #15184a; }
+        main { padding: 34px 0 52px; }
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            background: #fbfcff;
+        }
+        .card-header h4 {
+            margin: 0;
+            color: #15184a;
+            font-size: 22px;
+        }
+        .card-body { padding: 24px; }
+        .row { display: flex; gap: 16px; }
+        .col { flex: 1; }
+        .mb-3 { margin-bottom: 18px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-weight: 800; color: #15184a; }
+        .form-control {
+            width: 100%;
+            border: 1px solid #d7dce5;
+            border-radius: 7px;
+            min-height: 44px;
+            padding: 10px 12px;
+            color: #111827;
+            background: #fff;
+        }
+        textarea.form-control { min-height: 180px; line-height: 1.5; }
+        .is-invalid { border-color: #dc2626; }
+        .invalid-feedback { color: #dc2626; font-size: 13px; }
+        .alert {
+            border-radius: 7px;
+            padding: 12px 14px;
+            font-weight: 700;
+        }
+        .alert-success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .btn {
+            border: 0;
+            border-radius: 7px;
+            padding: 12px 18px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .btn-primary { background: #15184a; color: #fff; }
+        .btn-primary:hover { background: #22266b; }
+        .text-center { text-align: center; }
+        .spinner-border { display: inline-block; margin-left: 6px; }
+        .hero {
+            padding: 48px 0;
+        }
+        .hero-panel {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 28px;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 34px;
+            box-shadow: 0 18px 50px rgba(17, 24, 39, 0.08);
+        }
+        .eyebrow {
+            color: #ef786e;
+            font-weight: 800;
+            letter-spacing: 0;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #15184a;
+            font-size: clamp(34px, 5vw, 54px);
+            line-height: 1.02;
+            margin: 0 0 16px;
+        }
+        .hero p {
+            color: #4b5563;
+            font-size: 17px;
+            line-height: 1.6;
+            margin: 0 0 22px;
+        }
+        .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+        .button-link {
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 7px;
+            padding: 12px 16px;
+            font-weight: 800;
+        }
+        .button-link.primary { background: #15184a; color: #fff; }
+        .button-link.secondary { background: #f2f4fb; color: #15184a; }
+        .feature-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 12px;
+        }
+        .feature-list li {
+            background: #f7f8fc;
+            border: 1px solid #e5e7eb;
+            border-radius: 7px;
+            padding: 13px;
+            color: #374151;
+            font-weight: 700;
+        }
+        @media (max-width: 760px) {
+            .navbar .container { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+            .hero-panel { grid-template-columns: 1fr; padding: 24px; }
+            .row { display: block; }
+        }
+    </style>
     @livewireStyles()
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                <a class="navbar-brand" href="{{ url('/') }}">AI PDF Reader</a>
+                <div class="nav-links">
+                    <a class="nav-link" href="{{ route('pdf-text') }}">Upload PDF</a>
+                    <a class="nav-link" href="{{ route('convert-pdf') }}">Search PDF</a>
                 </div>
             </div>
         </nav>
 
-        <main class="py-4">
+        <main>
             @yield('content')
         </main>
     </div>
-    <x-toaster-hub /> <!-- 👈 -->
+    <x-toaster-hub />
     @livewireScripts()
 </body>
 </html>
