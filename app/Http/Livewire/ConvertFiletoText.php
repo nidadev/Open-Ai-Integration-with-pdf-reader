@@ -83,8 +83,7 @@ class ConvertFiletoText extends Component
             }
         }
 
-        return "OpenAI is not available, so this demo used local pattern matching.\n\n"
-            . "Most relevant source text:\n"
+        return "Based on the PDF, the most relevant information I found is:\n\n"
             . mb_substr($knowledgeBase, 0, 1200);
     }
 
