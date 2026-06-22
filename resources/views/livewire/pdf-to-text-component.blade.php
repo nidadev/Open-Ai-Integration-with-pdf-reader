@@ -4,12 +4,12 @@
             <h4>UPLOAD PDF</h4>
         </div>
         <div class="card-body">
-            <form wire:submit.prevent='getFile' method="post">
+            <form action="{{ route('pdf-text.upload') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="row mb-3">
                     <div class="col">
                         <div class="form-group">
-                            <input wire:model='pdf_doc' class="form-control @error('pdf_doc') is-invalid @enderror"
+                            <input class="form-control @error('pdf_doc') is-invalid @enderror"
                                 type="file" name="pdf_doc" id="pdf_doc">
                             @error('pdf_doc')
                             <div class="invalid-feedback">
@@ -19,14 +19,13 @@
                         </div>
                     </div>
                 </div>
-                @if ($convertedText)
+                @if (session('convertedText') || $convertedText)
                 <div class="row mb-3">
                     <div class="col">
                         <label for="convertedText">Converted Text</label>
                         <div class="form-group">
-                            <textarea disabled wire:model='convertedText' class="form-control" name="" id="" cols="30"
-                                rows="10">
-                            </textarea>
+                            <textarea disabled class="form-control" id="convertedText" cols="30"
+                                rows="10">{{ session('convertedText') ?: $convertedText }}</textarea>
 
                         </div>
 

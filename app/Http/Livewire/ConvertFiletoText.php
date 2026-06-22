@@ -48,12 +48,16 @@ class ConvertFiletoText extends Component
     private function embeddingFor(string $text): array
     {
         if (config('openai.api_key')) {
-            $vector = OpenAI::embeddings()->create([
-                'model' => 'text-embedding-ada-002',
-                'input' => $text,
-            ]);
+            try {
+                $vector = OpenAI::embeddings()->create([
+                    'model' => 'text-embedding-ada-002',
+                    'input' => $text,
+                ]);
 
-            return $vector['data'][0]['embedding'];
+                return $vector['data'][0]['embedding'];
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
         }
 
         return $this->localEmbedding($text);
@@ -62,20 +66,24 @@ class ConvertFiletoText extends Component
     private function answerQuestion(string $question, string $knowledgeBase): string
     {
         if (config('openai.api_key')) {
-            $prompt = "Answer the user's question using only the source text below. "
-                . "If the answer is not present, say: Sorry, I do not know.\n\n"
-                . "Question: {$question}\n\nSource text:\n{$knowledgeBase}";
+            try {
+                $prompt = "Answer the user's question using only the source text below. "
+                    . "If the answer is not present, say: Sorry, I do not know.\n\n"
+                    . "Question: {$question}\n\nSource text:\n{$knowledgeBase}";
 
-            $response = OpenAI::completions()->create([
-                'model' => 'gpt-3.5-turbo-instruct',
-                'prompt' => $prompt,
-                'max_tokens' => 700,
-            ]);
+                $response = OpenAI::completions()->create([
+                    'model' => 'gpt-3.5-turbo-instruct',
+                    'prompt' => $prompt,
+                    'max_tokens' => 700,
+                ]);
 
-            return trim($response['choices'][0]['text'] ?? '');
+                return trim($response['choices'][0]['text'] ?? '');
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
         }
 
-        return "OpenAI key is not configured, so this demo used local pattern matching.\n\n"
+        return "OpenAI is not available, so this demo used local pattern matching.\n\n"
             . "Most relevant source text:\n"
             . mb_substr($knowledgeBase, 0, 1200);
     }
