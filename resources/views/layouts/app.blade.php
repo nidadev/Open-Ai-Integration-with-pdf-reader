@@ -159,6 +159,18 @@
             color: #374151;
             font-weight: 700;
         }
+        .policy-page { padding: 20px 0; }
+        .policy-content {
+            color: #374151;
+            line-height: 1.65;
+        }
+        .policy-content h5 {
+            color: #15184a;
+            font-size: 18px;
+            margin: 24px 0 8px;
+        }
+        .policy-content p { margin: 0 0 14px; }
+        .policy-content a { color: #15184a; font-weight: 800; }
         @media (max-width: 760px) {
             .navbar .container { align-items: flex-start; flex-direction: column; padding: 14px 0; }
             .hero-panel { grid-template-columns: 1fr; padding: 24px; }
@@ -175,6 +187,7 @@
                 <div class="nav-links">
                     <a class="nav-link" href="{{ route('upload-pdf') }}">Upload PDF</a>
                     <a class="nav-link" href="{{ route('convert-pdf') }}">Search PDF</a>
+                    <a class="nav-link" href="{{ route('privacy-policy') }}">Privacy</a>
                 </div>
             </div>
         </nav>
