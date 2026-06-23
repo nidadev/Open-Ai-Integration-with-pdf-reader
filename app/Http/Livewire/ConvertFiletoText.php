@@ -19,10 +19,11 @@ class ConvertFiletoText extends Component
     public function convertFile()
     {
         $this->validate();
-        $pdf_file = Pdfdoc::find($this->document);
+        $uploadedPdfIds = session('uploaded_pdf_ids', []);
+        $pdf_file = Pdfdoc::whereIn('id', $uploadedPdfIds)->find($this->document);
 
         if (!$pdf_file) {
-            $this->addError('document', 'Selected PDF was not found.');
+            $this->addError('document', 'Please select a PDF uploaded from this device.');
             return;
         }
 
@@ -102,7 +103,10 @@ class ConvertFiletoText extends Component
 
     public function render()
     {
-        $docs = Pdfdoc::all();
+        $docs = Pdfdoc::whereIn('id', session('uploaded_pdf_ids', []))
+            ->latest()
+            ->get();
+
         return view('livewire.convert-fileto-text', ['docs' => $docs])->extends('layouts.app')->section('content');
     }
 }

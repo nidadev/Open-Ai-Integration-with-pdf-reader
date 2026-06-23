@@ -26,6 +26,10 @@ class PdfUploadController extends Controller
                 ]);
         }
 
+        $uploadedPdfIds = $request->session()->get('uploaded_pdf_ids', []);
+        $uploadedPdfIds[] = $result['pdf']->id;
+        $request->session()->put('uploaded_pdf_ids', array_values(array_unique($uploadedPdfIds)));
+
         return back()->with([
             'message' => 'File created & converted successfully.',
             'convertedText' => $result['text'],

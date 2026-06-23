@@ -24,11 +24,16 @@
                         <div class="form-group">
                             <label for="document">Select Pdf File</label>
                             <select wire:model='document' class="form-control @error('document') is-invalid @enderror">
-                                <option value="">--select file---</option>
+                                <option value="">--select your uploaded file---</option>
                                 @foreach ($docs as $doc)
                                     <option value="{{ $doc->id }}">{{ $doc->name }}</option>
                                 @endforeach
                             </select>
+                            @if ($docs->isEmpty())
+                                <div class="invalid-feedback" style="display:block;">
+                                    Upload a PDF first, then it will appear here for this device.
+                                </div>
+                            @endif
                             @error('document')
                                 <div class="invalid-feedback">
                                     {{ $message }}
